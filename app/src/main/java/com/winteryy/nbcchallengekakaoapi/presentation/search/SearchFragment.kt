@@ -1,4 +1,4 @@
-package com.winteryy.nbcchallengekakaoapi.presentation
+package com.winteryy.nbcchallengekakaoapi.presentation.search
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

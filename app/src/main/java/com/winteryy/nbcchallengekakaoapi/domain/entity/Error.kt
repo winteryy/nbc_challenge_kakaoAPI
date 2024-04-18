@@ -1,4 +1,3 @@
 package com.winteryy.nbcchallengekakaoapi.domain.entity
 
-interface Error {
-}
+sealed interface Error
