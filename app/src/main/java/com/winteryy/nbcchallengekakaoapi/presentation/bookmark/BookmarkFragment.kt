@@ -1,4 +1,4 @@
-package com.winteryy.nbcchallengekakaoapi
+package com.winteryy.nbcchallengekakaoapi.presentation
 
 import android.os.Bundle
 import android.view.LayoutInflater
