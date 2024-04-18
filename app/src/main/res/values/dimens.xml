@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="height_title_view">60dp</dimen>
+    <dimen name="text_size_title">24sp</dimen>
+
+    <dimen name="margin_medium">20dp</dimen>
+
+    <dimen name="padding_medium">20dp</dimen>
+    <dimen name="padding_small">16dp</dimen>
+</resources>
