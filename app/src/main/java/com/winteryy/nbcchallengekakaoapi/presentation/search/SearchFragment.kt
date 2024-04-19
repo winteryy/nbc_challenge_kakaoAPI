@@ -5,12 +5,19 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.activityViewModels
 import com.winteryy.nbcchallengekakaoapi.databinding.FragmentSearchBinding
+import com.winteryy.nbcchallengekakaoapi.presentation.MainViewModel
 
 class SearchFragment : Fragment() {
 
     private var _binding: FragmentSearchBinding? = null
     private val binding get() = _binding!!
+
+    private val sharedViewModel: MainViewModel by activityViewModels()
+    private val adapter by lazy {
+        SearchAdapter()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -18,6 +25,17 @@ class SearchFragment : Fragment() {
     ): View {
         _binding = FragmentSearchBinding.inflate(layoutInflater, container, false)
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding.searchRV.adapter = adapter
+        sharedViewModel.searchList.observe(viewLifecycleOwner) {
+            adapter.submitList(it)
+        }
+        sharedViewModel.searchImage("코틀린")
+
     }
 
     override fun onDestroyView() {

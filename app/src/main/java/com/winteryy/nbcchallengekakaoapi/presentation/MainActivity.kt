@@ -19,6 +19,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+        mainViewModel
 
         val viewPagerAdapter = ViewPagerAdapter(supportFragmentManager, lifecycle)
         binding.viewPager.adapter = viewPagerAdapter
@@ -30,7 +31,5 @@ class MainActivity : AppCompatActivity() {
                 else -> "None"
             }
         }.attach()
-
-        mainViewModel.searchImage("안드로이드")
     }
 }
