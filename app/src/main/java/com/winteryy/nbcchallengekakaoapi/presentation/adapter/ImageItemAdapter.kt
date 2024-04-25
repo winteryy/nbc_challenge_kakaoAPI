@@ -1,4 +1,4 @@
-package com.winteryy.nbcchallengekakaoapi.presentation.search
+package com.winteryy.nbcchallengekakaoapi.presentation.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -9,7 +9,9 @@ import coil.load
 import com.winteryy.nbcchallengekakaoapi.databinding.ItemListBinding
 import com.winteryy.nbcchallengekakaoapi.presentation.model.ImageListItem
 
-class SearchAdapter: ListAdapter<ImageListItem, SearchAdapter.SearchViewHolder>(DIFF_UTIL) {
+class ImageItemAdapter(
+    private val onSwitchChecked: (ImageListItem) -> Unit
+): ListAdapter<ImageListItem, ImageItemAdapter.SearchViewHolder>(DIFF_UTIL) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchViewHolder {
         return SearchViewHolder(
@@ -23,6 +25,12 @@ class SearchAdapter: ListAdapter<ImageListItem, SearchAdapter.SearchViewHolder>(
         holder.onBind(getItem(position))
     }
 
+    override fun onViewRecycled(holder: SearchViewHolder) {
+        super.onViewRecycled(holder)
+        holder.removeListener()
+    }
+
+
     inner class SearchViewHolder(
         private val binding: ItemListBinding
     ): RecyclerView.ViewHolder(binding.root) {
@@ -31,6 +39,13 @@ class SearchAdapter: ListAdapter<ImageListItem, SearchAdapter.SearchViewHolder>(
             binding.itemImageView.load(item.thumbnailUrl)
             binding.itemTitleTextView.text = item.siteName.ifBlank { "이름 없음" }
             binding.bookmarkSwitch.isChecked = item.isBookmarked
+            binding.bookmarkSwitch.setOnCheckedChangeListener { _, _ ->
+                    onSwitchChecked.invoke(item.copy(isBookmarked = !item.isBookmarked))
+            }
+        }
+
+        fun removeListener() {
+            binding.bookmarkSwitch.setOnCheckedChangeListener(null)
         }
 
     }

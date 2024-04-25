@@ -20,13 +20,37 @@ class MainViewModel(
     private var _searchList = MutableLiveData<List<ImageListItem>>(emptyList())
     val searchList: LiveData<List<ImageListItem>> get() = _searchList
 
+    private var _bookmarkList = MutableLiveData<List<ImageListItem>>(emptyList())
+    val bookmarkList: LiveData<List<ImageListItem>> get() = _bookmarkList
+
     fun searchImage(query: String) = viewModelScope.launch {
         when(val result = searchUseCase(query)) {
             is Result.Success -> {
                 _searchList.value = result.data.toModel().searchImageList
+                _bookmarkList.value = _searchList.value!!.filter {
+                    it.isBookmarked
+                }
             }
             is Result.Error -> Log.d("MainViewModel", "fail")
         }
+    }
+
+    fun updateItem(imageListItem: ImageListItem) {
+        val newBookmarkList = mutableListOf<ImageListItem>()
+        _searchList.value = _searchList.value?.map {
+            if(it.imageUrl==imageListItem.imageUrl) {
+                if(imageListItem.isBookmarked) {
+                    newBookmarkList.add(imageListItem)
+                }
+                imageListItem
+            }else {
+                if(it.isBookmarked) {
+                    newBookmarkList.add(it)
+                }
+                it
+            }
+        }
+        _bookmarkList.value = newBookmarkList
     }
 }
 
