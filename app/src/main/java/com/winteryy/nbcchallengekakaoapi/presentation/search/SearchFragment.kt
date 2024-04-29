@@ -1,13 +1,14 @@
 package com.winteryy.nbcchallengekakaoapi.presentation.search
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.winteryy.nbcchallengekakaoapi.databinding.FragmentSearchBinding
 import com.winteryy.nbcchallengekakaoapi.presentation.MainViewModel
+import com.winteryy.nbcchallengekakaoapi.presentation.adapter.ImageItemAdapter
 
 class SearchFragment : Fragment() {
 
@@ -16,7 +17,9 @@ class SearchFragment : Fragment() {
 
     private val sharedViewModel: MainViewModel by activityViewModels()
     private val adapter by lazy {
-        SearchAdapter()
+        ImageItemAdapter {
+            sharedViewModel.updateItem(it)
+        }
     }
 
     override fun onCreateView(

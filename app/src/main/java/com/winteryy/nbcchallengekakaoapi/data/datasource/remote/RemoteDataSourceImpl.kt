@@ -10,7 +10,7 @@ class RemoteDataSourceImpl(
         return try {
             networkService.searchImage(query = query)
         }catch (e: Exception) {
-            //todo 예외 핸들링
+            //TODO 예외 핸들링(Data전용 Exception 클래스 만들지 말지)
             null
         }
     }
