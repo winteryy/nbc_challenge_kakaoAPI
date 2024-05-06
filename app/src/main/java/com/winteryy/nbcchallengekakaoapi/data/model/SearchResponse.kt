@@ -3,14 +3,14 @@ package com.winteryy.nbcchallengekakaoapi.data.model
 import com.google.gson.annotations.SerializedName
 import java.util.Date
 
-data class SearchResponse(
+data class SearchResponse<T>(
     @SerializedName("meta")
-    val meta: ResponseMeta,
+    val meta: MetaResponse,
     @SerializedName("documents")
-    val documents: List<Document>,
+    val documents: List<T>,
 )
 
-data class ResponseMeta(
+data class MetaResponse(
     @SerializedName("total_count")
     val totalCount: Int,
     @SerializedName("pageable_count")
@@ -19,7 +19,7 @@ data class ResponseMeta(
     val isEnd: Boolean,
 )
 
-data class Document(
+data class ImageDocumentResponse(
     @SerializedName("collection")
     val collection: String,
     @SerializedName("thumbnail_url")
@@ -37,3 +37,19 @@ data class Document(
     @SerializedName("datetime")
     val datetime: Date,
 )
+
+data class VideoDocumentResponse(
+    @SerializedName("title")
+    val title: String,
+    @SerializedName("url")
+    val url: String,
+    @SerializedName("datetime")
+    val datetime: Date,
+    @SerializedName("play_time")
+    val playTime: Int,
+    @SerializedName("thumbnail")
+    val thumbnail: String,
+    @SerializedName("author")
+    val author: String,
+)
+

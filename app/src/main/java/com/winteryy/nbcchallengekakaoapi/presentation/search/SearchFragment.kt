@@ -6,19 +6,28 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.flowWithLifecycle
+import androidx.lifecycle.lifecycleScope
 import com.winteryy.nbcchallengekakaoapi.databinding.FragmentSearchBinding
-import com.winteryy.nbcchallengekakaoapi.presentation.MainViewModel
-import com.winteryy.nbcchallengekakaoapi.presentation.adapter.ImageItemAdapter
+import com.winteryy.nbcchallengekakaoapi.presentation.shared.SearchSharedEvent
+import com.winteryy.nbcchallengekakaoapi.presentation.shared.SearchSharedViewModel
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 class SearchFragment : Fragment() {
 
     private var _binding: FragmentSearchBinding? = null
     private val binding get() = _binding!!
 
-    private val sharedViewModel: MainViewModel by activityViewModels()
+    private val searchSharedViewModel: SearchSharedViewModel by activityViewModels()
+    private val searchViewModel: SearchViewModel by viewModels {
+        SearchViewModelFactory()
+    }
+
     private val adapter by lazy {
-        ImageItemAdapter {
-            sharedViewModel.updateItem(it)
+        SearchRvAdapter {
+            searchViewModel.onBookmark(it)
         }
     }
 
@@ -34,16 +43,58 @@ class SearchFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.searchRV.adapter = adapter
-        sharedViewModel.searchList.observe(viewLifecycleOwner) {
-            adapter.submitList(it)
-        }
-        sharedViewModel.searchImage("코틀린")
 
+        viewLifecycleOwner.lifecycleScope.launch {
+            searchViewModel.uiState.flowWithLifecycle(viewLifecycleOwner.lifecycle)
+                .collectLatest { state ->
+                    onBind(state)
+                }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            searchViewModel.event.flowWithLifecycle(viewLifecycleOwner.lifecycle)
+                .collectLatest { event ->
+                    onEvent(event)
+                }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            searchSharedViewModel.event.flowWithLifecycle(viewLifecycleOwner.lifecycle)
+                .collectLatest { event ->
+                    onSharedEvent(event)
+                }
+        }
+
+        searchViewModel.onSearch("kotlin")
+
+    }
+
+    private fun onBind(state: SearchListUiState) {
+        adapter.submitList(state.list)
+    }
+
+    private fun onEvent(event: SearchListEvent) {
+        when(event) {
+            is SearchListEvent.UpdateBookmark -> searchSharedViewModel.updateBookmarkItems(event.list)
+        }
+    }
+
+    private fun onSharedEvent(event: SearchSharedEvent) {
+        when(event) {
+            is SearchSharedEvent.UpdateBookmark -> {}
+            is SearchSharedEvent.UpdateSearch -> {
+                searchViewModel.changeBookmarkState(event.id)
+            }
+        }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    companion object {
+        fun newInstance() = SearchFragment()
     }
 
 }
