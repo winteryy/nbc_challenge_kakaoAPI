@@ -8,8 +8,9 @@ import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.winteryy.nbcchallengekakaoapi.databinding.ItemBookmarkBinding
 
-class BookmarkRvAdapter
-    : ListAdapter<BookmarkListItem, BookmarkRvAdapter.BookmarkItemViewHolder>(DIFF_UTIL) {
+class BookmarkRvAdapter(
+    private val onSwitchChecked: (String, List<BookmarkListItem>) -> Unit
+) : ListAdapter<BookmarkListItem, BookmarkRvAdapter.BookmarkItemViewHolder>(DIFF_UTIL) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BookmarkItemViewHolder {
         return BookmarkItemViewHolder(
@@ -25,6 +26,11 @@ class BookmarkRvAdapter
         holder.onBind(getItem(position))
     }
 
+    override fun onViewRecycled(holder: BookmarkItemViewHolder) {
+        holder.removeSwitchListener()
+        super.onViewRecycled(holder)
+    }
+
     inner class BookmarkItemViewHolder(
         private val binding: ItemBookmarkBinding
     ): RecyclerView.ViewHolder(binding.root) {
@@ -34,7 +40,16 @@ class BookmarkRvAdapter
                 itemImageView.load(item.thumbnailUrl)
                 itemTitleTextView.text = item.title.ifBlank { "이름 없음" }
                 bookmarkSwitch.isChecked = item.isBookmarked
+                bookmarkSwitch.setOnCheckedChangeListener { _, _ ->
+                    if(bookmarkSwitch.isChecked != item.isBookmarked) {
+                        onSwitchChecked(item.thumbnailUrl, currentList)
+                    }
+                }
             }
+        }
+
+        fun removeSwitchListener() {
+            binding.bookmarkSwitch.setOnCheckedChangeListener(null)
         }
     }
 

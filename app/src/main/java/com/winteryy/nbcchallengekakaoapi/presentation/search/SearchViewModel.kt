@@ -61,6 +61,23 @@ class SearchViewModel(
         _event.emit(SearchListEvent.UpdateBookmark(uiState.value.list))
     }
 
+    fun changeBookmarkState(id: String) = viewModelScope.launch {
+        _uiState.update { prev ->
+            prev.copy(
+                list = prev.list.map {
+                    if(it.thumbnailUrl == id) {
+                        when(it) {
+                            is SearchListItem.SearchVideoItem -> it.copy(isBookmarked = it.isBookmarked.not())
+                            is SearchListItem.SearchImageItem -> it.copy(isBookmarked = it.isBookmarked.not())
+                        }
+                    }else {
+                        it
+                    }
+                }
+            )
+        }
+    }
+
     private fun convertItems(
         searchResult: IntegratedSearchResultEntity
     ): List<SearchListItem> = searchResult.documents.map {

@@ -10,6 +10,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.winteryy.nbcchallengekakaoapi.databinding.FragmentSearchBinding
+import com.winteryy.nbcchallengekakaoapi.presentation.shared.SearchSharedEvent
 import com.winteryy.nbcchallengekakaoapi.presentation.shared.SearchSharedViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -57,6 +58,13 @@ class SearchFragment : Fragment() {
                 }
         }
 
+        viewLifecycleOwner.lifecycleScope.launch {
+            searchSharedViewModel.event.flowWithLifecycle(viewLifecycleOwner.lifecycle)
+                .collectLatest { event ->
+                    onSharedEvent(event)
+                }
+        }
+
         searchViewModel.onSearch("kotlin")
 
     }
@@ -68,6 +76,15 @@ class SearchFragment : Fragment() {
     private fun onEvent(event: SearchListEvent) {
         when(event) {
             is SearchListEvent.UpdateBookmark -> searchSharedViewModel.updateBookmarkItems(event.list)
+        }
+    }
+
+    private fun onSharedEvent(event: SearchSharedEvent) {
+        when(event) {
+            is SearchSharedEvent.UpdateBookmark -> {}
+            is SearchSharedEvent.UpdateSearch -> {
+                searchViewModel.changeBookmarkState(event.id)
+            }
         }
     }
 

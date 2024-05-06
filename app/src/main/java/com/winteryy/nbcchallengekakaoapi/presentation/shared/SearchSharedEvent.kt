@@ -8,4 +8,8 @@ sealed interface SearchSharedEvent {
         val list: List<BookmarkListItem>
     ): SearchSharedEvent
 
+    data class UpdateSearch(
+        val id: String
+    ): SearchSharedEvent
+
 }

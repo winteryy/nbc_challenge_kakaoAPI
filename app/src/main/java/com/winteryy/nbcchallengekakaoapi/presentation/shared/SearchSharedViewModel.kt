@@ -28,4 +28,11 @@ class SearchSharedViewModel: ViewModel() {
             _event.emit(SearchSharedEvent.UpdateBookmark(it))
         }
     }
+
+    fun updateSearchItem(id: String, list: List<BookmarkListItem>) = viewModelScope.launch {
+        _event.emit(SearchSharedEvent.UpdateBookmark(
+            list.filter { it.thumbnailUrl != id }
+        ))
+        _event.emit(SearchSharedEvent.UpdateSearch(id))
+    }
 }

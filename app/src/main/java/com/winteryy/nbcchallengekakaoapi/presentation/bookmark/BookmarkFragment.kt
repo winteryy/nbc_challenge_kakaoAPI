@@ -23,7 +23,9 @@ class BookmarkFragment: Fragment() {
     private val bookmarkViewModel: BookmarkViewModel by viewModels()
     private val searchSharedViewModel: SearchSharedViewModel by activityViewModels()
     private val adapter by lazy {
-        BookmarkRvAdapter()
+        BookmarkRvAdapter { id, list ->
+            searchSharedViewModel.updateSearchItem(id, list)
+        }
     }
 
     override fun onCreateView(
@@ -62,6 +64,7 @@ class BookmarkFragment: Fragment() {
     private fun onSharedEvent(event: SearchSharedEvent) {
         when(event) {
             is SearchSharedEvent.UpdateBookmark -> bookmarkViewModel.updateBookmark(event.list)
+            is SearchSharedEvent.UpdateSearch -> {}
         }
     }
 
