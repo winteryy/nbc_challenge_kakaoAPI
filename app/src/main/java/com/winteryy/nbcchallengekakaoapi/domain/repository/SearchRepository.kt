@@ -1,9 +1,9 @@
 package com.winteryy.nbcchallengekakaoapi.domain.repository
 
-import com.winteryy.nbcchallengekakaoapi.domain.entity.DataError
-import com.winteryy.nbcchallengekakaoapi.domain.entity.Result
-import com.winteryy.nbcchallengekakaoapi.domain.entity.SearchImageEntity
+import com.winteryy.nbcchallengekakaoapi.domain.entity.SearchItemEntity
+import com.winteryy.nbcchallengekakaoapi.domain.entity.SearchResultEntity
 
 interface SearchRepository {
-    suspend fun searchImage(query: String): Result<SearchImageEntity, DataError>
+    suspend fun searchImage(query: String): SearchResultEntity<SearchItemEntity.ImageItemEntity>
+    suspend fun searchVideo(query: String): SearchResultEntity<SearchItemEntity.VideoItemEntity>
 }

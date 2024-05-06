@@ -1,5 +1,6 @@
 package com.winteryy.nbcchallengekakaoapi
 
+import com.winteryy.nbcchallengekakaoapi.domain.usecase.SearchUseCaseImpl
 import org.junit.Test
 
 import org.junit.Assert.*

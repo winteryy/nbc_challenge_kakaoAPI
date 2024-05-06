@@ -1,5 +1,10 @@
 <resources>
     <string name="app_name">nbc challenge kakaoAPI</string>
     <string name="title_text">Challenge</string>
+    <string name="image">IMAGE</string>
+    <string name="video">VIDEO</string>
+    <string name="search_fragment_title">Search</string>
+    <string name="bookmark_fragment_title">Bookmark</string>
+
 
 </resources>
